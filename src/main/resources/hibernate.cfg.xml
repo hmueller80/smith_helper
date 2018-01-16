@@ -74,5 +74,7 @@ Contributor(s):
     <mapping class="at.ac.oeaw.cemm.barcodes.entity.SampleEntity"/>   
     <mapping class="at.ac.oeaw.cemm.barcodes.entity.Barcode"/>
     <mapping class="at.ac.oeaw.cemm.barcodes.entity.BarcodeKit"/>
+    <mapping class="at.ac.oeaw.cemm.barcodes.entity.SequencingIndexEntity"/>
+    
   </session-factory>
 </hibernate-configuration>

@@ -3,6 +3,7 @@ package at.ac.oeaw.cemm.barcodes.entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,6 +30,10 @@ public class SampleEntity implements Serializable {
     @JoinColumn(name = "barcode_i7", referencedColumnName = "id")
     @ManyToOne
     private Barcode barcodeI7;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sequencingIndexId")
+    private SequencingIndexEntity sequencingIndexes;
 
     public Integer getId() {
       
@@ -95,6 +100,40 @@ public class SampleEntity implements Serializable {
 
     public void setBarcodeI7(Barcode barcodeI7) {
         this.barcodeI7 = barcodeI7;
+    }
+    
+    public SequencingIndexEntity getSequencingIndexes() {
+        return this.sequencingIndexes;
+    }
+
+    public void setSequencingIndexes(SequencingIndexEntity sequencingindexes) {
+        this.sequencingIndexes = sequencingindexes;
+    }
+    
+    public String getSequencingIndex1(){
+        if(this.sequencingIndexes == null){
+            return "NONE";
+        }
+        if(this.sequencingIndexes.getIndex().length() <= 8){
+            return this.sequencingIndexes.getIndex();
+        }
+        if(this.sequencingIndexes.getIndex().length() > 8){
+            return this.sequencingIndexes.getIndex().substring(0,8);
+        }
+        return "";
+    }
+    
+    public String getSequencingIndex2(){
+        if(this.sequencingIndexes == null){
+            return "NONE";
+        }        
+        if(this.sequencingIndexes.getIndex().length() <= 8){
+            return "NONE";
+        }        
+        if(this.sequencingIndexes.getIndex().length() > 8){
+            return this.sequencingIndexes.getIndex().substring(8);
+        }
+        return "";
     }
 
 }

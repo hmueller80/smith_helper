@@ -34,6 +34,7 @@ public class BarcodeParser {
         CSVParser parser = new CSVParser(reader,
                 CSVFormat.RFC4180
                         .withHeader(BarcodesCSVHeader.class)
+                        .withSkipHeaderRecord()
                         .withDelimiter(';')
                         .withIgnoreEmptyLines());
 
@@ -50,7 +51,7 @@ public class BarcodeParser {
             if (sequencei5.isEmpty() || sequencei5.equalsIgnoreCase("undefined") || sequencei5.equalsIgnoreCase("none")){
                 sequencei5 = "NONE";
             }else if (!sequencei5.matches("[ATCG]+")){
-                throw new Exception("Wrong i5 index: "+sequencei5+" in sample"+sample.getId());
+                 System.out.println("WARN: Wrong i5 index: "+sequencei5+" in sample"+sample.getId());
             }
             barcodeI5.setSequence(sequencei5);
             barcodeI5.setBarcodeType("i5");
@@ -60,7 +61,7 @@ public class BarcodeParser {
             if (sequencei7.equalsIgnoreCase("undefined") || sequencei7.equalsIgnoreCase("none")){
                 sequencei7 = "NONE";
             }else if (sequencei7.isEmpty() || !sequencei7.matches("[ATCG]+")){
-                throw new Exception("Wrong i7 index: "+sequencei7+" in sample"+sample.getId());
+                 System.out.println("WARN: Wrong i7 index: "+sequencei7+" in sample"+sample.getId());
             }
             barcodeI7.setSequence(sequencei7);
             barcodeI7.setBarcodeType("i7");
@@ -70,13 +71,12 @@ public class BarcodeParser {
             
             Integer sampleId = sample.getId();
             if (resultSet.containsKey(sampleId)){
-                System.out.println("WARM: Duplicate sample "+sample.getId());
                 SampleEntity existingSample = resultSet.get(sampleId);
                 if (!existingSample.getBarcodeI5().getSequence().equals(sample.getBarcodeI5().getSequence())){
-                    throw new Exception("Duplicate sample "+sample.getId()+" with two different i5 indices");
+                    System.out.println("WARN: Duplicate sample "+sample.getId()+" with two different i5 indices");
                 }
                 if (!existingSample.getBarcodeI7().getSequence().equals(sample.getBarcodeI7().getSequence())){
-                    throw new Exception("Duplicate sample "+sample.getId()+" with two different i7 indices");
+                    System.out.println("WARN: Duplicate sample "+sample.getId()+" with two different i7 indices");
                 }
                 
             }else {
@@ -86,13 +86,6 @@ public class BarcodeParser {
                 maxId = sampleId;
             }
         }
-        
-        
-       for (int i=1;i<=maxId;i++ ){
-           if (!resultSet.keySet().contains(i)){
-               throw new Exception("Sample with id "+i+" not found in csv");
-           }
-       }
         
         return resultSet;
     
